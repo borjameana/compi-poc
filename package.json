@@ -1,0 +1,13 @@
+{
+  "name": "test-compi",
+  "version": "1.0.0",
+  "description": "Mini proyecto Node.js para probar Compi",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
