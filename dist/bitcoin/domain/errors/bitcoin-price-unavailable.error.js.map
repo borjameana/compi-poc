@@ -1,0 +1,1 @@
+{"version":3,"file":"bitcoin-price-unavailable.error.js","sourceRoot":"","sources":["../../../../src/bitcoin/domain/errors/bitcoin-price-unavailable.error.ts"],"names":[],"mappings":";;;AAAA,MAAa,4BAA6B,SAAQ,KAAK;IAGnD,YAAY,OAAe;QACvB,KAAK,CAAC,OAAO,CAAC,CAAC;QAHV,SAAI,GAAG,2BAA2B,CAAC;IAI5C,CAAC;CACJ;AAND,oEAMC"}

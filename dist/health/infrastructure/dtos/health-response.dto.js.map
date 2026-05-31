@@ -1,0 +1,1 @@
+{"version":3,"file":"health-response.dto.js","sourceRoot":"","sources":["../../../../src/health/infrastructure/dtos/health-response.dto.ts"],"names":[],"mappings":";;;AAEA,MAAa,iBAAiB;IAG1B,MAAM,CAAC,IAAI,CAAC,KAAmB;QAC3B,OAAO,EAAE,MAAM,EAAE,KAAK,CAAC,MAAM,EAAE,CAAC;IACpC,CAAC;CACJ;AAND,8CAMC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"update-task-status.dto.js","sourceRoot":"","sources":["../../../../src/tasks/infrastructure/dtos/update-task-status.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,6CAA8C;AAC9C,qDAAyC;AACzC,wEAAoE;AAEpE,MAAa,mBAAmB;CAO/B;AAPD,kDAOC;AADG;IALC,IAAA,qBAAW,EAAC;QACT,WAAW,EAAE,iBAAiB;QAC9B,IAAI,EAAE,wBAAU;KACnB,CAAC;IACD,IAAA,wBAAM,EAAC,wBAAU,CAAC;;mDACC"}

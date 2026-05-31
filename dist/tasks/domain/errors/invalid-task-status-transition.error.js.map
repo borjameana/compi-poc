@@ -1,0 +1,1 @@
+{"version":3,"file":"invalid-task-status-transition.error.js","sourceRoot":"","sources":["../../../../src/tasks/domain/errors/invalid-task-status-transition.error.ts"],"names":[],"mappings":";;;AAEA,MAAa,gCAAiC,SAAQ,KAAK;IAGvD,YAAY,IAAgB,EAAE,EAAc;QACxC,KAAK,CAAC,mCAAmC,IAAI,OAAO,EAAE,EAAE,CAAC,CAAC;QAHrD,SAAI,GAAG,gCAAgC,CAAC;IAIjD,CAAC;CACJ;AAND,4EAMC"}
