@@ -36,7 +36,9 @@ export class ToysController {
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Created' })
     @ApiBody({ type: CreateToyDto })
     async create(@Body() dto: CreateToyDto): Promise<ToyResponseDto> {
+        console.log('[ToysController] INPUT:', JSON.stringify(dto));
         const toy = await this.createToy.call(dto);
+        console.log('[ToysController] OUTPUT:', JSON.stringify(toy));
         return ToyResponseDto.from(toy);
     }
 

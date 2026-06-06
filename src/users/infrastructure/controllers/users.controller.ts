@@ -36,7 +36,9 @@ export class UsersController {
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Created' })
     @ApiBody({ type: CreateUserDto })
     async create(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
+        console.log('[UsersController] INPUT:', JSON.stringify(dto));
         const user = await this.createUser.call(dto);
+        console.log('[UsersController] OUTPUT:', JSON.stringify(user));
         return UserResponseDto.from(user);
     }
 

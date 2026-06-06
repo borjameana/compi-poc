@@ -50,7 +50,9 @@ export class TasksController {
     @ApiBadRequestResponse({ description: 'Validation error' })
     @ApiBody({ type: CreateTaskDto })
     async create(@Body() dto: CreateTaskDto): Promise<TaskResponseDto> {
+        console.log('[TasksController] INPUT:', JSON.stringify(dto));
         const task = await this.createTask.call(dto);
+        console.log('[TasksController] OUTPUT:', JSON.stringify(task));
         return TaskResponseDto.from(task);
     }
 
