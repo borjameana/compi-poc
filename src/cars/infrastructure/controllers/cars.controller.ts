@@ -36,10 +36,10 @@ export class CarsController {
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Created' })
     @ApiBody({ type: CreateCarDto })
     async create(@Body() dto: CreateCarDto): Promise<CarResponseDto> {
-        console.log('[CarsController] INPUT:', JSON.stringify(dto));
+        console.log('DEBUG [CarsController] INPUT:', JSON.stringify(dto));
         const car = await this.createCar.call(dto);
         const result = CarResponseDto.from(car);
-        console.log('[CarsController] OUTPUT:', JSON.stringify(result));
+        console.log('DEBUG [CarsController] OUTPUT:', JSON.stringify(result));
         return result;
     }
 
