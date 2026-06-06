@@ -2,7 +2,7 @@
   "name": "node-starter",
   "version": "0.1.0",
   "private": true,
-  "description": "NestJS Node starter Compi POC",
+  "description": "Borja Compi POC",
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
