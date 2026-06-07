@@ -1,6 +1,6 @@
 # test-compi
 
-Mini semilla de Node.js para pruebas de Compi.
+Mini semilla de Node.js para pruebas de Compi by borja.
 
 ## Uso
 
