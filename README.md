@@ -1,4 +1,4 @@
-# test-compi
+# test-compi aleks y nacho
 
 Mini semilla de Node.js para pruebas de Compi.
 
