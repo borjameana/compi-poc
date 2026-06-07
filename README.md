@@ -1,4 +1,4 @@
-# test-compi
+# test-compi borja
 
 Mini semilla de Node.js para pruebas de Compi.
 
