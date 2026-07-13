@@ -16,6 +16,7 @@ const health_module_1 = require("./health/health.module");
 const users_module_1 = require("./users/users.module");
 const toys_module_1 = require("./toys/toys.module");
 const tasks_module_1 = require("./tasks/tasks.module");
+const status_module_1 = require("./status/status.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,6 +36,7 @@ exports.AppModule = AppModule = __decorate([
             toys_module_1.ToysModule,
             bitcoin_module_1.BitcoinModule,
             tasks_module_1.TasksModule,
+            status_module_1.StatusModule,
         ],
     })
 ], AppModule);
