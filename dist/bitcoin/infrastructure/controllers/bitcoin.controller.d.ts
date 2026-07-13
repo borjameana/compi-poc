@@ -4,4 +4,5 @@ export declare class BitcoinController {
     private readonly getBitcoinHistory;
     constructor(getBitcoinHistory: GetBitcoinHistory);
     getHistory(): Promise<BitcoinHistoryResponseDto>;
+    catch(error: any): void;
 }

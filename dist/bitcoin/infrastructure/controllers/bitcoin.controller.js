@@ -20,16 +20,30 @@ let BitcoinController = class BitcoinController {
         this.getBitcoinHistory = getBitcoinHistory;
     }
     async getHistory() {
+        console.log("Hola compi!"); // Added "Hola compi!" log
+        console.log("Entering getHistory method."); // Entry log
         try {
             const history = await this.getBitcoinHistory.call();
-            return bitcoin_history_response_dto_1.BitcoinHistoryResponseDto.from(history);
+            const responseDto = bitcoin_history_response_dto_1.BitcoinHistoryResponseDto.from(history);
+            console.log("Exiting getHistory method with DTO:", responseDto); // Exit log with DTO
+            return responseDto;
         }
         catch (error) {
             if (error instanceof bitcoin_price_unavailable_error_1.BitcoinPriceUnavailableError) {
+                console.error("Bitcoin price unavailable error:", error.message); // Log error
                 throw new common_1.ServiceUnavailableException(error.message);
             }
+            console.error("An unexpected error occurred:", error); // Log unexpected error
             throw error;
         }
+        const history = await this.getBitcoinHistory.call();
+        return bitcoin_history_response_dto_1.BitcoinHistoryResponseDto.from(history);
+    }
+    catch(error) {
+        if (error instanceof bitcoin_price_unavailable_error_1.BitcoinPriceUnavailableError) {
+            throw new common_1.ServiceUnavailableException(error.message);
+        }
+        throw error;
     }
 };
 exports.BitcoinController = BitcoinController;

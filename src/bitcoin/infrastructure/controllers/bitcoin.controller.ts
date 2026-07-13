@@ -13,13 +13,20 @@ export class BitcoinController {
     @ApiOkResponse({ status: HttpStatus.OK, description: 'OK' })
     @ApiResponse({ status: HttpStatus.SERVICE_UNAVAILABLE, description: 'Bitcoin price unavailable' })
     async getHistory(): Promise<BitcoinHistoryResponseDto> {
+        console.log("Hola compi!"); // Added "Hola compi!" log
+        console.log("Entering getHistory method."); // Entry log
+
         try {
             const history = await this.getBitcoinHistory.call();
-            return BitcoinHistoryResponseDto.from(history);
+            const responseDto = BitcoinHistoryResponseDto.from(history);
+            console.log("Exiting getHistory method with DTO:", responseDto); // Exit log with DTO
+            return responseDto;
         } catch (error) {
             if (error instanceof BitcoinPriceUnavailableError) {
+                console.error("Bitcoin price unavailable error:", error.message); // Log error
                 throw new ServiceUnavailableException(error.message);
             }
+            console.error("An unexpected error occurred:", error); // Log unexpected error
             throw error;
         }
     }
