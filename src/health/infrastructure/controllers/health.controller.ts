@@ -13,6 +13,7 @@ export class HealthController {
     @ApiOkResponse({ status: HttpStatus.OK })
     async isHealth(): Promise<HealthResponseDto> {
         const status = this.checkHealth.call();
+        console.log('Health check performed');
         return HealthResponseDto.from(status);
     }
 }
