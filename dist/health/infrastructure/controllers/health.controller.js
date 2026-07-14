@@ -19,6 +19,7 @@ let HealthController = class HealthController {
         this.checkHealth = checkHealth;
     }
     async isHealth() {
+        console.log('Health check endpoint called');
         const status = this.checkHealth.call();
         return health_response_dto_1.HealthResponseDto.from(status);
     }
