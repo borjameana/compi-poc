@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var UsersController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
@@ -24,25 +25,32 @@ const user_not_found_error_1 = require("../../domain/errors/user-not-found.error
 const create_user_dto_1 = require("../dtos/create-user.dto");
 const update_user_dto_1 = require("../dtos/update-user.dto");
 const user_response_dto_1 = require("../dtos/user-response.dto");
-let UsersController = class UsersController {
+let UsersController = UsersController_1 = class UsersController {
     constructor(createUser, deleteUser, getUser, listUsers, updateUser) {
         this.createUser = createUser;
         this.deleteUser = deleteUser;
         this.getUser = getUser;
         this.listUsers = listUsers;
         this.updateUser = updateUser;
+        this.logger = new common_1.Logger(UsersController_1.name);
     }
     async create(dto) {
+        this.logger.log({ operation: 'create', dto });
         const user = await this.createUser.call(dto);
+        this.logger.log({ operation: 'create', status: 'completed', userId: user.id });
         return user_response_dto_1.UserResponseDto.from(user);
     }
     async findAll() {
+        this.logger.log({ operation: 'findAll' });
         const users = await this.listUsers.call();
+        this.logger.log({ operation: 'findAll', status: 'completed', count: users.length });
         return users.map((user) => user_response_dto_1.UserResponseDto.from(user));
     }
     async findOne(id) {
+        this.logger.log({ operation: 'findOne', id });
         try {
             const user = await this.getUser.call(id);
+            this.logger.log({ operation: 'findOne', status: 'completed', userId: user.id });
             return user_response_dto_1.UserResponseDto.from(user);
         }
         catch (error) {
@@ -51,8 +59,10 @@ let UsersController = class UsersController {
         }
     }
     async update(id, dto) {
+        this.logger.log({ operation: 'update', id, dto });
         try {
             const user = await this.updateUser.call(id, dto);
+            this.logger.log({ operation: 'update', status: 'completed', userId: user.id });
             return user_response_dto_1.UserResponseDto.from(user);
         }
         catch (error) {
@@ -61,8 +71,10 @@ let UsersController = class UsersController {
         }
     }
     async remove(id) {
+        this.logger.log({ operation: 'remove', id });
         try {
             await this.deleteUser.call(id);
+            this.logger.log({ operation: 'remove', status: 'completed', userId: id });
         }
         catch (error) {
             this.throwIfNotFound(error);
@@ -71,6 +83,7 @@ let UsersController = class UsersController {
     }
     throwIfNotFound(error) {
         if (error instanceof user_not_found_error_1.UserNotFoundError) {
+            this.logger.warn({ operation: 'throwIfNotFound', message: error.message, error: error.name });
             throw new common_1.NotFoundException(error.message);
         }
     }
@@ -122,7 +135,7 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "remove", null);
-exports.UsersController = UsersController = __decorate([
+exports.UsersController = UsersController = UsersController_1 = __decorate([
     (0, swagger_1.ApiTags)('users'),
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [create_user_1.CreateUser,

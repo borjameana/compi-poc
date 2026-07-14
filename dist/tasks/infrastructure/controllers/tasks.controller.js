@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var TasksController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TasksController = void 0;
 const common_1 = require("@nestjs/common");
@@ -26,25 +27,32 @@ const create_task_dto_1 = require("../dtos/create-task.dto");
 const list_tasks_query_dto_1 = require("../dtos/list-tasks-query.dto");
 const task_response_dto_1 = require("../dtos/task-response.dto");
 const update_task_status_dto_1 = require("../dtos/update-task-status.dto");
-let TasksController = class TasksController {
+let TasksController = TasksController_1 = class TasksController {
     constructor(createTask, listTasks, getTask, updateTaskStatus, deleteTask) {
         this.createTask = createTask;
         this.listTasks = listTasks;
         this.getTask = getTask;
         this.updateTaskStatus = updateTaskStatus;
         this.deleteTask = deleteTask;
+        this.logger = new common_1.Logger(TasksController_1.name);
     }
     async create(dto) {
+        this.logger.log({ operation: 'create', dto });
         const task = await this.createTask.call(dto);
+        this.logger.log({ operation: 'create', status: 'completed', taskId: task.id.value });
         return task_response_dto_1.TaskResponseDto.from(task);
     }
     async findAll(query) {
+        this.logger.log({ operation: 'findAll', query });
         const tasks = await this.listTasks.call(query);
+        this.logger.log({ operation: 'findAll', status: 'completed', count: tasks.length });
         return tasks.map((task) => task_response_dto_1.TaskResponseDto.from(task));
     }
     async findOne(id) {
+        this.logger.log({ operation: 'findOne', id });
         try {
             const task = await this.getTask.call(id);
+            this.logger.log({ operation: 'findOne', status: 'completed', taskId: task.id.value });
             return task_response_dto_1.TaskResponseDto.from(task);
         }
         catch (error) {
@@ -53,8 +61,10 @@ let TasksController = class TasksController {
         }
     }
     async updateStatus(id, dto) {
+        this.logger.log({ operation: 'updateStatus', id, dto });
         try {
             const task = await this.updateTaskStatus.call(id, dto.status);
+            this.logger.log({ operation: 'updateStatus', status: 'completed', taskId: task.id.value, newStatus: task.status });
             return task_response_dto_1.TaskResponseDto.from(task);
         }
         catch (error) {
@@ -63,8 +73,10 @@ let TasksController = class TasksController {
         }
     }
     async remove(id) {
+        this.logger.log({ operation: 'remove', id });
         try {
             await this.deleteTask.call(id);
+            this.logger.log({ operation: 'remove', status: 'completed', taskId: id });
         }
         catch (error) {
             this.throwDomainErrors(error);
@@ -73,6 +85,7 @@ let TasksController = class TasksController {
     }
     throwDomainErrors(error) {
         if (error instanceof task_not_found_error_1.TaskNotFoundError) {
+            this.logger.warn({ operation: 'throwDomainErrors', message: error.message, error: error.name });
             throw new common_1.NotFoundException(error.message);
         }
         if (error instanceof invalid_task_status_transition_error_1.InvalidTaskStatusTransitionError) {
@@ -131,7 +144,7 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "remove", null);
-exports.TasksController = TasksController = __decorate([
+exports.TasksController = TasksController = TasksController_1 = __decorate([
     (0, swagger_1.ApiTags)('tasks'),
     (0, common_1.Controller)('api/tasks'),
     __metadata("design:paramtypes", [create_task_1.CreateTask,

@@ -8,18 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var HealthController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HealthController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const check_health_1 = require("../../application/check-health");
 const health_response_dto_1 = require("../dtos/health-response.dto");
-let HealthController = class HealthController {
+let HealthController = HealthController_1 = class HealthController {
     constructor(checkHealth) {
         this.checkHealth = checkHealth;
+        this.logger = new common_1.Logger(HealthController_1.name);
     }
     async isHealth() {
+        this.logger.log({ operation: 'isHealth' });
         const status = this.checkHealth.call();
+        this.logger.log({ operation: 'isHealth', status: 'completed', healthStatus: status.status });
         return health_response_dto_1.HealthResponseDto.from(status);
     }
 };
@@ -32,7 +36,7 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], HealthController.prototype, "isHealth", null);
-exports.HealthController = HealthController = __decorate([
+exports.HealthController = HealthController = HealthController_1 = __decorate([
     (0, swagger_1.ApiTags)('health'),
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [check_health_1.CheckHealth])

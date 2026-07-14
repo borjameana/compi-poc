@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var ToysController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ToysController = void 0;
 const common_1 = require("@nestjs/common");
@@ -24,25 +25,32 @@ const toy_not_found_error_1 = require("../../domain/errors/toy-not-found.error")
 const create_toy_dto_1 = require("../dtos/create-toy.dto");
 const toy_response_dto_1 = require("../dtos/toy-response.dto");
 const update_toy_dto_1 = require("../dtos/update-toy.dto");
-let ToysController = class ToysController {
+let ToysController = ToysController_1 = class ToysController {
     constructor(createToy, deleteToy, getToy, listToys, updateToy) {
         this.createToy = createToy;
         this.deleteToy = deleteToy;
         this.getToy = getToy;
         this.listToys = listToys;
         this.updateToy = updateToy;
+        this.logger = new common_1.Logger(ToysController_1.name);
     }
     async create(dto) {
+        this.logger.log({ operation: 'create', dto });
         const toy = await this.createToy.call(dto);
+        this.logger.log({ operation: 'create', status: 'completed', toyId: toy.id.value });
         return toy_response_dto_1.ToyResponseDto.from(toy);
     }
     async findAll() {
+        this.logger.log({ operation: 'findAll' });
         const toys = await this.listToys.call();
+        this.logger.log({ operation: 'findAll', status: 'completed', count: toys.length });
         return toys.map((toy) => toy_response_dto_1.ToyResponseDto.from(toy));
     }
     async findOne(id) {
+        this.logger.log({ operation: 'findOne', id });
         try {
             const toy = await this.getToy.call(id);
+            this.logger.log({ operation: 'findOne', status: 'completed', toyId: toy.id.value });
             return toy_response_dto_1.ToyResponseDto.from(toy);
         }
         catch (error) {
@@ -51,8 +59,10 @@ let ToysController = class ToysController {
         }
     }
     async update(id, dto) {
+        this.logger.log({ operation: 'update', id, dto });
         try {
             const toy = await this.updateToy.call(id, dto);
+            this.logger.log({ operation: 'update', status: 'completed', toyId: toy.id.value });
             return toy_response_dto_1.ToyResponseDto.from(toy);
         }
         catch (error) {
@@ -61,8 +71,10 @@ let ToysController = class ToysController {
         }
     }
     async remove(id) {
+        this.logger.log({ operation: 'remove', id });
         try {
             await this.deleteToy.call(id);
+            this.logger.log({ operation: 'remove', status: 'completed', toyId: id });
         }
         catch (error) {
             this.throwIfNotFound(error);
@@ -71,6 +83,7 @@ let ToysController = class ToysController {
     }
     throwIfNotFound(error) {
         if (error instanceof toy_not_found_error_1.ToyNotFoundError) {
+            this.logger.warn({ operation: 'throwIfNotFound', message: error.message, error: error.name });
             throw new common_1.NotFoundException(error.message);
         }
     }
@@ -122,7 +135,7 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ToysController.prototype, "remove", null);
-exports.ToysController = ToysController = __decorate([
+exports.ToysController = ToysController = ToysController_1 = __decorate([
     (0, swagger_1.ApiTags)('toys'),
     (0, common_1.Controller)('toys'),
     __metadata("design:paramtypes", [create_toy_1.CreateToy,

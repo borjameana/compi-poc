@@ -5,6 +5,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Logger,
     NotFoundException,
     Param,
     Patch,
@@ -24,6 +25,7 @@ import { UpdateToyDto } from '../dtos/update-toy.dto';
 @ApiTags('toys')
 @Controller('toys')
 export class ToysController {
+    private readonly logger = new Logger(ToysController.name);
     constructor(
         private readonly createToy: CreateToy,
         private readonly deleteToy: DeleteToy,
@@ -36,14 +38,18 @@ export class ToysController {
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Created' })
     @ApiBody({ type: CreateToyDto })
     async create(@Body() dto: CreateToyDto): Promise<ToyResponseDto> {
+        this.logger.log({ operation: 'create', dto });
         const toy = await this.createToy.call(dto);
+        this.logger.log({ operation: 'create', status: 'completed', toyId: toy.id });
         return ToyResponseDto.from(toy);
     }
 
     @Get()
     @ApiOkResponse({ status: HttpStatus.OK, description: 'OK' })
     async findAll(): Promise<ToyResponseDto[]> {
+        this.logger.log({ operation: 'findAll' });
         const toys = await this.listToys.call();
+        this.logger.log({ operation: 'findAll', status: 'completed', count: toys.length });
         return toys.map((toy) => ToyResponseDto.from(toy));
     }
 
@@ -51,8 +57,10 @@ export class ToysController {
     @ApiOkResponse({ status: HttpStatus.OK, description: 'OK' })
     @ApiNotFoundResponse({ description: 'Toy not found' })
     async findOne(@Param('id') id: string): Promise<ToyResponseDto> {
+        this.logger.log({ operation: 'findOne', id });
         try {
             const toy = await this.getToy.call(id);
+            this.logger.log({ operation: 'findOne', status: 'completed', toyId: toy.id });
             return ToyResponseDto.from(toy);
         } catch (error) {
             this.throwIfNotFound(error);
@@ -68,8 +76,10 @@ export class ToysController {
         @Param('id') id: string,
         @Body() dto: UpdateToyDto,
     ): Promise<ToyResponseDto> {
+        this.logger.log({ operation: 'update', id, dto });
         try {
             const toy = await this.updateToy.call(id, dto);
+            this.logger.log({ operation: 'update', status: 'completed', toyId: toy.id });
             return ToyResponseDto.from(toy);
         } catch (error) {
             this.throwIfNotFound(error);
@@ -82,8 +92,10 @@ export class ToysController {
     @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Deleted' })
     @ApiNotFoundResponse({ description: 'Toy not found' })
     async remove(@Param('id') id: string): Promise<void> {
+        this.logger.log({ operation: 'remove', id });
         try {
             await this.deleteToy.call(id);
+            this.logger.log({ operation: 'remove', status: 'completed', toyId: id });
         } catch (error) {
             this.throwIfNotFound(error);
             throw error;
@@ -92,6 +104,7 @@ export class ToysController {
 
     private throwIfNotFound(error: unknown): void {
         if (error instanceof ToyNotFoundError) {
+            this.logger.warn({ operation: 'throwIfNotFound', message: error.message, error: error.name });
             throw new NotFoundException(error.message);
         }
     }

@@ -13,6 +13,7 @@ export declare class TasksController {
     private readonly getTask;
     private readonly updateTaskStatus;
     private readonly deleteTask;
+    private readonly logger;
     constructor(createTask: CreateTask, listTasks: ListTasks, getTask: GetTask, updateTaskStatus: UpdateTaskStatus, deleteTask: DeleteTask);
     create(dto: CreateTaskDto): Promise<TaskResponseDto>;
     findAll(query: ListTasksQueryDto): Promise<TaskResponseDto[]>;

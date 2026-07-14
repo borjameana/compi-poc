@@ -12,6 +12,7 @@ export declare class ToysController {
     private readonly getToy;
     private readonly listToys;
     private readonly updateToy;
+    private readonly logger;
     constructor(createToy: CreateToy, deleteToy: DeleteToy, getToy: GetToy, listToys: ListToys, updateToy: UpdateToy);
     create(dto: CreateToyDto): Promise<ToyResponseDto>;
     findAll(): Promise<ToyResponseDto[]>;

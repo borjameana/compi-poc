@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var CarsController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CarsController = void 0;
 const common_1 = require("@nestjs/common");
@@ -24,25 +25,32 @@ const car_not_found_error_1 = require("../../domain/errors/car-not-found.error")
 const car_response_dto_1 = require("../dtos/car-response.dto");
 const create_car_dto_1 = require("../dtos/create-car.dto");
 const update_car_dto_1 = require("../dtos/update-car.dto");
-let CarsController = class CarsController {
+let CarsController = CarsController_1 = class CarsController {
     constructor(createCar, deleteCar, getCar, listCars, updateCar) {
         this.createCar = createCar;
         this.deleteCar = deleteCar;
         this.getCar = getCar;
         this.listCars = listCars;
         this.updateCar = updateCar;
+        this.logger = new common_1.Logger(CarsController_1.name);
     }
     async create(dto) {
+        this.logger.log({ operation: 'create', dto });
         const car = await this.createCar.call(dto);
+        this.logger.log({ operation: 'create', status: 'completed', carId: car.id.value });
         return car_response_dto_1.CarResponseDto.from(car);
     }
     async findAll() {
+        this.logger.log({ operation: 'findAll' });
         const cars = await this.listCars.call();
+        this.logger.log({ operation: 'findAll', status: 'completed', count: cars.length });
         return cars.map((car) => car_response_dto_1.CarResponseDto.from(car));
     }
     async findOne(id) {
+        this.logger.log({ operation: 'findOne', id });
         try {
             const car = await this.getCar.call(id);
+            this.logger.log({ operation: 'findOne', status: 'completed', carId: car.id.value });
             return car_response_dto_1.CarResponseDto.from(car);
         }
         catch (error) {
@@ -51,8 +59,10 @@ let CarsController = class CarsController {
         }
     }
     async update(id, dto) {
+        this.logger.log({ operation: 'update', id, dto });
         try {
             const car = await this.updateCar.call(id, dto);
+            this.logger.log({ operation: 'update', status: 'completed', carId: car.id.value });
             return car_response_dto_1.CarResponseDto.from(car);
         }
         catch (error) {
@@ -61,8 +71,10 @@ let CarsController = class CarsController {
         }
     }
     async remove(id) {
+        this.logger.log({ operation: 'remove', id });
         try {
             await this.deleteCar.call(id);
+            this.logger.log({ operation: 'remove', status: 'completed', carId: id });
         }
         catch (error) {
             this.throwIfNotFound(error);
@@ -71,6 +83,7 @@ let CarsController = class CarsController {
     }
     throwIfNotFound(error) {
         if (error instanceof car_not_found_error_1.CarNotFoundError) {
+            this.logger.warn({ operation: 'throwIfNotFound', message: error.message, error: error.name });
             throw new common_1.NotFoundException(error.message);
         }
     }
@@ -122,7 +135,7 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], CarsController.prototype, "remove", null);
-exports.CarsController = CarsController = __decorate([
+exports.CarsController = CarsController = CarsController_1 = __decorate([
     (0, swagger_1.ApiTags)('cars'),
     (0, common_1.Controller)('cars'),
     __metadata("design:paramtypes", [create_car_1.CreateCar,

@@ -12,6 +12,7 @@ export declare class UsersController {
     private readonly getUser;
     private readonly listUsers;
     private readonly updateUser;
+    private readonly logger;
     constructor(createUser: CreateUser, deleteUser: DeleteUser, getUser: GetUser, listUsers: ListUsers, updateUser: UpdateUser);
     create(dto: CreateUserDto): Promise<UserResponseDto>;
     findAll(): Promise<UserResponseDto[]>;

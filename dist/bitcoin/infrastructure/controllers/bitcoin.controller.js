@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var BitcoinController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BitcoinController = void 0;
 const common_1 = require("@nestjs/common");
@@ -15,17 +16,24 @@ const swagger_1 = require("@nestjs/swagger");
 const get_bitcoin_history_1 = require("../../application/get-bitcoin-history");
 const bitcoin_price_unavailable_error_1 = require("../../domain/errors/bitcoin-price-unavailable.error");
 const bitcoin_history_response_dto_1 = require("../dtos/bitcoin-history-response.dto");
-let BitcoinController = class BitcoinController {
+let BitcoinController = BitcoinController_1 = class BitcoinController {
     constructor(getBitcoinHistory) {
         this.getBitcoinHistory = getBitcoinHistory;
+        this.logger = new common_1.Logger(BitcoinController_1.name);
     }
     async getHistory() {
+        this.logger.log({ operation: 'getHistory' });
         try {
             const history = await this.getBitcoinHistory.call();
+            if (history.prices.length === 0) {
+                this.logger.warn({ operation: 'getHistory', message: 'No bitcoin history found', status: 'empty' });
+            }
+            this.logger.log({ operation: 'getHistory', status: 'completed', count: history.prices.length });
             return bitcoin_history_response_dto_1.BitcoinHistoryResponseDto.from(history);
         }
         catch (error) {
             if (error instanceof bitcoin_price_unavailable_error_1.BitcoinPriceUnavailableError) {
+                this.logger.warn({ operation: 'getHistory', message: error.message, error: error.name });
                 throw new common_1.ServiceUnavailableException(error.message);
             }
             throw error;
@@ -41,7 +49,7 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], BitcoinController.prototype, "getHistory", null);
-exports.BitcoinController = BitcoinController = __decorate([
+exports.BitcoinController = BitcoinController = BitcoinController_1 = __decorate([
     (0, swagger_1.ApiTags)('bitcoin'),
     (0, common_1.Controller)('bitcoin'),
     __metadata("design:paramtypes", [get_bitcoin_history_1.GetBitcoinHistory])

@@ -12,6 +12,7 @@ export declare class CarsController {
     private readonly getCar;
     private readonly listCars;
     private readonly updateCar;
+    private readonly logger;
     constructor(createCar: CreateCar, deleteCar: DeleteCar, getCar: GetCar, listCars: ListCars, updateCar: UpdateCar);
     create(dto: CreateCarDto): Promise<CarResponseDto>;
     findAll(): Promise<CarResponseDto[]>;

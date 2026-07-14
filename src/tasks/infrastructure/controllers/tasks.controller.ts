@@ -6,6 +6,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Logger,
     NotFoundException,
     Param,
     ParseUUIDPipe,
@@ -37,6 +38,7 @@ import { UpdateTaskStatusDto } from '../dtos/update-task-status.dto';
 @ApiTags('tasks')
 @Controller('api/tasks')
 export class TasksController {
+    private readonly logger = new Logger(TasksController.name);
     constructor(
         private readonly createTask: CreateTask,
         private readonly listTasks: ListTasks,
@@ -50,7 +52,9 @@ export class TasksController {
     @ApiBadRequestResponse({ description: 'Validation error' })
     @ApiBody({ type: CreateTaskDto })
     async create(@Body() dto: CreateTaskDto): Promise<TaskResponseDto> {
+        this.logger.log({ operation: 'create', dto });
         const task = await this.createTask.call(dto);
+        this.logger.log({ operation: 'create', status: 'completed', taskId: task.id.value });
         return TaskResponseDto.from(task);
     }
 
@@ -58,7 +62,9 @@ export class TasksController {
     @ApiOkResponse({ status: HttpStatus.OK, description: 'OK', type: TaskResponseDto, isArray: true })
     @ApiBadRequestResponse({ description: 'Validation error' })
     async findAll(@Query() query: ListTasksQueryDto): Promise<TaskResponseDto[]> {
+        this.logger.log({ operation: 'findAll', query });
         const tasks = await this.listTasks.call(query);
+        this.logger.log({ operation: 'findAll', status: 'completed', count: tasks.length });
         return tasks.map((task) => TaskResponseDto.from(task));
     }
 
@@ -66,8 +72,10 @@ export class TasksController {
     @ApiOkResponse({ status: HttpStatus.OK, description: 'OK', type: TaskResponseDto })
     @ApiNotFoundResponse({ description: 'Task not found' })
     async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<TaskResponseDto> {
+        this.logger.log({ operation: 'findOne', id });
         try {
             const task = await this.getTask.call(id);
+            this.logger.log({ operation: 'findOne', status: 'completed', taskId: task.id.value });
             return TaskResponseDto.from(task);
         } catch (error) {
             this.throwDomainErrors(error);
@@ -84,8 +92,10 @@ export class TasksController {
         @Param('id', new ParseUUIDPipe()) id: string,
         @Body() dto: UpdateTaskStatusDto,
     ): Promise<TaskResponseDto> {
+        this.logger.log({ operation: 'updateStatus', id, dto });
         try {
             const task = await this.updateTaskStatus.call(id, dto.status);
+            this.logger.log({ operation: 'updateStatus', status: 'completed', taskId: task.id.value, newStatus: task.status });
             return TaskResponseDto.from(task);
         } catch (error) {
             this.throwDomainErrors(error);
@@ -98,8 +108,10 @@ export class TasksController {
     @ApiNoContentResponse({ description: 'Deleted' })
     @ApiNotFoundResponse({ description: 'Task not found' })
     async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
+        this.logger.log({ operation: 'remove', id });
         try {
             await this.deleteTask.call(id);
+            this.logger.log({ operation: 'remove', status: 'completed', taskId: id });
         } catch (error) {
             this.throwDomainErrors(error);
             throw error;
@@ -108,6 +120,7 @@ export class TasksController {
 
     private throwDomainErrors(error: unknown): void {
         if (error instanceof TaskNotFoundError) {
+            this.logger.warn({ operation: 'throwDomainErrors', message: error.message, error: error.name });
             throw new NotFoundException(error.message);
         }
         if (error instanceof InvalidTaskStatusTransitionError) {
