@@ -12,6 +12,7 @@ export class HealthController {
     @ApiOperation({ summary: 'Lets you test the health of an API instance.' })
     @ApiOkResponse({ status: HttpStatus.OK })
     async isHealth(): Promise<HealthResponseDto> {
+        console.log('Health check endpoint called');
         const status = this.checkHealth.call();
         return HealthResponseDto.from(status);
     }
